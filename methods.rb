@@ -44,6 +44,26 @@ module Enumerable
     end
     arr
   end
+
+  # MY COUNT
+  def my_count(args = nil)
+    count = 0
+
+    if block_given?
+      my_each do |i|
+        count += 1 if yield(i)
+      end
+
+    elsif !args.nil?
+      my_each do |i|
+        count += 1 if args == i
+      end
+
+    else
+      count = length
+    end
+    count
+  end
 end
 
 # TEST CASES
@@ -71,3 +91,15 @@ res = array.my_select do |x|
   x < 10
 end
 puts res
+
+puts 'my_count method:'
+res = array.my_count do |x|
+  x < 10
+end
+puts res
+
+res2 = array.my_count(12)
+puts res2
+
+res3 = array.my_count
+puts res3
