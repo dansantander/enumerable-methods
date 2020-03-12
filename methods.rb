@@ -71,7 +71,7 @@ module Enumerable
       my_each { |i| return false unless yield(i) }
 
     elsif args.class == Class
-      my_each { |i| return false unless i.is_a? arg s }
+      my_each { |i| return false unless i.is_a? args }
 
     elsif args.class == Regexp
       my_each { |i| return false unless i.match? args }
@@ -79,7 +79,43 @@ module Enumerable
     elsif my_each { |i| return false unless i == args }
     else my_each { |i| return false unless i }
     end
+    true
   end
+
+  # MY ANY
+  def my_any?(args = nil)
+    if block_given?
+      my_each { |i| return true if yield(i) }
+
+    elsif args.class == Class
+      my_each { |i| return true if i.is_a? args }
+
+    elsif args.class == Regexp
+      my_each { |i| return true if i.match? args }
+
+    elsif my_each { |i| return true if i == args }
+    else my_each { |i| return true if i }
+    end
+    false
+  end
+
+  # MY NONE
+  def my_none?(args = nil)
+    if block_given?
+      my_each { |i| return false if yield(i) }
+
+    elsif args.class == Class
+      my_each { |i| return false if i.is_a? args }
+
+    elsif args.class == Regexp
+      my_each { |i| return false if i.match? args }
+
+    elsif my_each { |i| return false if i == args }
+    else my_each { |i| return false if i }
+    end
+    true
+  end
+
 end
 
 # TEST CASES
@@ -119,3 +155,19 @@ puts res2
 
 res3 = array.my_count
 puts res3
+
+puts 'my_all? method:'
+puts "#{[18, 22, 33, 3, 5, '6'].my_all?(Numeric)}"
+puts "#{%w[ cat bat cup ].my_all?(/t/)}"
+puts "#{[18, 22, 33, 3, 5].my_all? {|num| num > 2}}"
+puts "#{[true, true, false].my_all?}"
+puts "#{[].my_all?}"
+puts "#{[3, 3, 3].my_all?(3)}"
+
+puts 'my_any? method:'
+puts "#{[18, 22, 33, 3, 5, '6'].my_any?(Numeric)}"
+puts "#{%w[ cat bat cup ].my_any?(/t/)}"
+puts "#{[18, 22, 33, 3, 5].my_any? {|num| num > 2}}"
+puts "#{[true, true, false].my_any?}"
+puts "#{[].my_any?}"
+puts "#{[3, 3, 3].my_any?(3)}"
