@@ -64,6 +64,22 @@ module Enumerable
     end
     count
   end
+
+  # MY ALL
+  def my_all?(args = nil)
+    if block_given?
+      my_each { |i| return false unless yield(i) }
+
+    elsif args.class == Class
+      my_each { |i| return false unless i.is_a? arg s }
+
+    elsif args.class == Regexp
+      my_each { |i| return false unless i.match? args }
+
+    elsif my_each { |i| return false unless i == args }
+    else my_each { |i| return false unless i }
+    end
+  end
 end
 
 # TEST CASES
