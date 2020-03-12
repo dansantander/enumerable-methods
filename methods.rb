@@ -106,17 +106,24 @@ module Enumerable
   end
 
   # MY MAP
-  def my_map
-    return to_enum unless block_given?
+  def my_map(my_proc = nil)
+    return to_enum unless block_given? || my_proc
 
     arr = []
     my_each do |i|
-      arr << yield(i)
+      arr <<  if my_proc
+                my_proc.call(i)
+              else
+                yield(i)
+              end
     end
     arr
   end
 
-
+  #MY INJECT
+  def my_inject(initial=nil, sym=nil)
+    arr = is_a?(Array) ? self : to_a
+  end
 end
 
 # TEST CASES
@@ -138,6 +145,14 @@ res = array.my_map do |x|
   x * 2
 end
 puts res
+
+puts 'my_map method with proc:'
+my_proc = proc do |x|
+  x * 3
+end
+res = array.my_map(my_proc)
+puts res
+
 
 puts 'my_select method:'
 res = array.my_select do |x|
@@ -180,3 +195,4 @@ puts "#{[1, 3.14, 42].my_none?(Float)}"
 puts "#{[nil, false].my_none? }"
 puts "#{[1, 2 , 3].my_none?}"
 puts "#{[].my_none?}"
+
