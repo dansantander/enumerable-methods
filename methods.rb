@@ -34,37 +34,6 @@ module Enumerable
     arr
   end
 
-  # MY MAP
-  def my_map
-    return to_enum unless block_given?
-
-    arr = []
-    my_each do |i|
-      arr << yield(i)
-    end
-    arr
-  end
-
-  # MY COUNT
-  def my_count(args = nil)
-    count = 0
-
-    if block_given?
-      my_each do |i|
-        count += 1 if yield(i)
-      end
-
-    elsif !args.nil?
-      my_each do |i|
-        count += 1 if args == i
-      end
-
-    else
-      count = length
-    end
-    count
-  end
-
   # MY ALL
   def my_all?(args = nil)
     if block_given?
@@ -115,6 +84,38 @@ module Enumerable
     end
     true
   end
+
+  # MY COUNT
+  def my_count(args = nil)
+    count = 0
+
+    if block_given?
+      my_each do |i|
+        count += 1 if yield(i)
+      end
+
+    elsif !args.nil?
+      my_each do |i|
+        count += 1 if args == i
+      end
+
+    else
+      count = length
+    end
+    count
+  end
+
+  # MY MAP
+  def my_map
+    return to_enum unless block_given?
+
+    arr = []
+    my_each do |i|
+      arr << yield(i)
+    end
+    arr
+  end
+
 
 end
 
@@ -171,3 +172,11 @@ puts "#{[18, 22, 33, 3, 5].my_any? {|num| num > 2}}"
 puts "#{[true, true, false].my_any?}"
 puts "#{[].my_any?}"
 puts "#{[3, 3, 3].my_any?(3)}"
+
+puts 'my_none? method:'
+puts "#{%w{ant bear cat}.my_none? { |word| word.length >= 4 }}"
+puts "#{%w{ant bear cat}.my_none?(/d/)}"
+puts "#{[1, 3.14, 42].my_none?(Float)}"
+puts "#{[nil, false].my_none? }"
+puts "#{[1, 2 , 3].my_none?}"
+puts "#{[].my_none?}"
