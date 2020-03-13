@@ -1,5 +1,4 @@
 module Enumerable
-  # MY EACH
   def my_each
     return to_enum unless block_given?
 
@@ -11,7 +10,6 @@ module Enumerable
     self
   end
 
-  # MY EACH WITH INDEX
   def my_each_with_index
     return to_enum unless block_given?
 
@@ -23,7 +21,6 @@ module Enumerable
     self
   end
 
-  # MY SELECT
   def my_select
     return to_enum unless block_given?
 
@@ -34,7 +31,6 @@ module Enumerable
     arr
   end
 
-  # MY ALL
   def my_all?(args = nil)
     if block_given?
       my_each { |i| return false unless yield(i) }
@@ -51,7 +47,6 @@ module Enumerable
     true
   end
 
-  # MY ANY
   def my_any?(args = nil)
     if block_given?
       my_each { |i| return true if yield(i) }
@@ -68,7 +63,6 @@ module Enumerable
     false
   end
 
-  # MY NONE
   def my_none?(args = nil)
     if block_given?
       my_each { |i| return false if yield(i) }
@@ -85,7 +79,6 @@ module Enumerable
     true
   end
 
-  # MY COUNT
   def my_count(args = nil)
     count = 0
 
@@ -105,94 +98,44 @@ module Enumerable
     count
   end
 
-  # MY MAP
   def my_map(my_proc = nil)
     return to_enum unless block_given? || my_proc
 
     arr = []
     my_each do |i|
-      arr <<  if my_proc
-                my_proc.call(i)
-              else
-                yield(i)
-              end
+      arr << if my_proc
+               my_proc.call(i)
+             else
+               yield(i)
+             end
     end
     arr
   end
 
-  #MY INJECT
-  def my_inject(initial=nil, sym=nil)
+  def my_inject(initial = nil, sym = nil)
     arr = is_a?(Array) ? self : to_a
+    if block_given?
+      res = initial
+      if initial.nil?
+        res = arr[0]
+        arr = arr[1..-1]
+      end
+      arr.my_each { |x| res = yield(res, x) }
+      res
+    elsif initial.class == Symbol
+      res = arr[0]
+      arr[1..-1].my_each { |x| res = res.send(initial, x) }
+      res
+    elsif sym.class == Symbol
+      res = initial
+      arr.my_each { |x| res = res.send(sym, x) }
+      res
+    end
   end
 end
 
-# TEST CASES
-array = [8, 10, 23]
-puts "The original array is: array = #{array}"
-
-puts 'my_each method:'
-array.my_each do |x|
-  puts x
+def multiply_els(array)
+  array.my_inject do |num, n|
+    num * n
+  end
 end
-
-puts 'my_each_with_index method:'
-array.my_each_with_index do |x, y|
-  puts "#{y}, #{x}"
-end
-
-puts 'my_map method:'
-res = array.my_map do |x|
-  x * 2
-end
-puts res
-
-puts 'my_map method with proc:'
-my_proc = proc do |x|
-  x * 3
-end
-res = array.my_map(my_proc)
-puts res
-
-
-puts 'my_select method:'
-res = array.my_select do |x|
-  x < 10
-end
-puts res
-
-puts 'my_count method:'
-res = array.my_count do |x|
-  x < 10
-end
-puts res
-
-res2 = array.my_count(12)
-puts res2
-
-res3 = array.my_count
-puts res3
-
-puts 'my_all? method:'
-puts "#{[18, 22, 33, 3, 5, '6'].my_all?(Numeric)}"
-puts "#{%w[ cat bat cup ].my_all?(/t/)}"
-puts "#{[18, 22, 33, 3, 5].my_all? {|num| num > 2}}"
-puts "#{[true, true, false].my_all?}"
-puts "#{[].my_all?}"
-puts "#{[3, 3, 3].my_all?(3)}"
-
-puts 'my_any? method:'
-puts "#{[18, 22, 33, 3, 5, '6'].my_any?(Numeric)}"
-puts "#{%w[ cat bat cup ].my_any?(/t/)}"
-puts "#{[18, 22, 33, 3, 5].my_any? {|num| num > 2}}"
-puts "#{[true, true, false].my_any?}"
-puts "#{[].my_any?}"
-puts "#{[3, 3, 3].my_any?(3)}"
-
-puts 'my_none? method:'
-puts "#{%w{ant bear cat}.my_none? { |word| word.length >= 4 }}"
-puts "#{%w{ant bear cat}.my_none?(/d/)}"
-puts "#{[1, 3.14, 42].my_none?(Float)}"
-puts "#{[nil, false].my_none? }"
-puts "#{[1, 2 , 3].my_none?}"
-puts "#{[].my_none?}"
-
