@@ -28,7 +28,7 @@ module Enumerable
 
     arr = []
     my_each do |i|
-      arr << [i] if yield(i)
+      arr << i if yield(i)
     end
     arr
   end
