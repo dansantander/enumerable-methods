@@ -2,23 +2,25 @@ module Enumerable
   def my_each
     return to_enum unless block_given?
 
+    arr = is_a?(Range) ? to_a : self
     i = 0
-    until i == length
-      yield(self[i])
+    until i == arr.length
+      yield(arr[i])
       i += 1
     end
-    self
+    arr
   end
 
   def my_each_with_index
     return to_enum unless block_given?
 
+    arr = is_a?(Range) ? to_a : self
     i = 0
-    until i == length
-      yield(self[i], i)
+    until i == arr.length
+      yield(arr[i], i)
       i += 1
     end
-    self
+    arr
   end
 
   def my_select
@@ -41,7 +43,8 @@ module Enumerable
     elsif args.class == Regexp
       my_each { |i| return false unless i.match? args }
 
-    elsif my_each { |i| return false unless i == args }
+    elsif !args.nil?
+      my_each { |i| return false unless i == args }
     else my_each { |i| return false unless i }
     end
     true
@@ -57,7 +60,8 @@ module Enumerable
     elsif args.class == Regexp
       my_each { |i| return true if i.match? args }
 
-    elsif my_each { |i| return true if i == args }
+    elsif !args.nil?
+      my_each { |i| return true if i == args }
     else my_each { |i| return true if i }
     end
     false
@@ -73,7 +77,8 @@ module Enumerable
     elsif args.class == Regexp
       my_each { |i| return false if i.match? args }
 
-    elsif my_each { |i| return false if i == args }
+    elsif !args.nil?
+      my_each { |i| return false if i == args }
     else my_each { |i| return false if i }
     end
     true
