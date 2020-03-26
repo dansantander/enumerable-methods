@@ -69,8 +69,19 @@ describe Enumerable do
   end
 
   describe '#my_map' do
-    it 'returns an enumerator if no block given' do
+  ans = []
+  let(:my_proc) { proc { |elem| elem * 2 } }
+
+    it 'returns an enumerator if no block or proc given ' do
       expect(array.my_map).to be_a(Enumerable)
+    end
+
+    it 'returns a new array containing the results of calling a given proc' do
+      expect(array.my_map(my_proc)).to eql([4, 8, 156, 18, 6])
+    end
+
+    it 'returns a new array containing the results of a given block' do
+      expect(array.my_map{ |x| x * 2 }).to eql([4, 8, 156, 18, 6])
     end
   end
 
