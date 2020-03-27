@@ -163,8 +163,35 @@ describe Enumerable do
   end
 
   describe '#my_inject' do
-    it 's' do
-    
+    it 'returns the result of accumulating all the return values from a given block' do
+      result = array.my_inject do |memo, elem|
+        memo + elem
+      end
+      expect(result).to eql(96) # [2,4,78,9,3] = 96
+    end
+
+    it 'returns the result of accumulating all the return values from a given block using an initial value' do
+      result = array.my_inject(2) do |memo, elem|
+        memo + elem
+      end
+      expect(result).to eql(98) # [2,4,78,9,3] = 96 + 2
+    end
+
+    it 'returns the result of accumulating all the return values from a given symbol' do
+      result = array.my_inject(:+)
+      expect(result).to eql(96)
+    end
+
+    it 'returns the result of accumulating all the return values from a given symbol using an initial value' do
+      result = array.my_inject(1, :+)
+      expect(result).to eql(97) # [2,4,78,9,3] = 96 + 1
+    end
+
+    it 'yields elements to the block when both a symbol and a block are given' do
+      result =  array.my_inject(4, :+) do |memo, elem|
+        memo * elem
+      end
+      expect(result).to eql(67392) # [2,4,78,9,3] = 67,392
     end
   end
 
