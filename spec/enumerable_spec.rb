@@ -54,6 +54,59 @@ describe Enumerable do
     end
   end
 
+  describe '#my_all?' do
+    it 'returns false unless all the elements of a collection comply with a block argument' do
+      expect(array.my_all?{ |x| x > 5}).to eql(false)
+    end
+
+    it 'returns false unless all the elements of a collection are equal to the passed argument' do
+      expect([1, 2, 4, 'hello'].my_all?(2)).to eql(false)
+    end
+
+    it 'returns false unless all the elements of a collection belong to the same Class' do
+      expect([1, 2, 4, 'hello'].my_all?(Integer)).to eql(false)
+    end
+
+    it 'returns false unless all the elements of a collection match a Regex argument' do
+      expect(['cat', 'bat', 'cup'].my_all?(/t/)).to eql(false)
+    end
+
+    it 'returns false unless all the elements of a collection are true' do
+      expect([true, true, false].my_all?).to eql(false)
+    end
+
+    it 'returns true if all the elements of a collection comply with the given argument' do
+      expect([2,4,6,8].my_all?(&:even?)).to eql(true)
+    end
+  end
+
+  describe '#my_any?' do
+  it 'returns true if at least one of the elements of a collection comply with a block argument' do
+    expect(array.my_any?{ |x| x > 5}).to eql(true)
+  end
+
+  it 'returns true if at least one of the elements of a collection are equal to the passed argument' do
+    expect([1, 2, 4, 'hello'].my_any?(2)).to eql(true)
+  end
+
+  it 'returns true if at least one of the elements of a collection belong to the same Class' do
+    expect([1, 2, 4, 'hello'].my_any?(Integer)).to eql(true)
+  end
+
+  it 'returns true if at least one of the elements of a collection match a Regex argument' do
+    expect(['cat', 'bat', 'cup'].my_any?(/t/)).to eql(true)
+  end
+
+  it 'returns true if at least one of the elements of a collection are true' do
+    expect([true, true, false].my_any?).to eql(true)
+  end
+
+  it 'returns false if none of the elements of a collection comply with the given argument' do
+    expect([1,3,5,7].my_any?(&:even?)).to eql(false)
+  end
+end
+
+
   describe '#my_count' do
     it 'returns the number of elements in an array' do
       expect(array.my_count).to eql(5)
@@ -69,7 +122,6 @@ describe Enumerable do
   end
 
   describe '#my_map' do
-  ans = []
   let(:my_proc) { proc { |elem| elem * 2 } }
 
     it 'returns an enumerator if no block or proc given ' do
