@@ -81,31 +81,56 @@ describe Enumerable do
   end
 
   describe '#my_any?' do
-  it 'returns true if at least one of the elements of a collection comply with a block argument' do
-    expect(array.my_any?{ |x| x > 5}).to eql(true)
+    it 'returns true if at least one of the elements of a collection comply with a block argument' do
+      expect(array.my_any?{ |x| x > 5}).to eql(true)
+    end
+
+    it 'returns true if at least one of the elements of a collection are equal to the passed argument' do
+      expect([1, 2, 4, 'hello'].my_any?(2)).to eql(true)
+    end
+
+    it 'returns true if at least one of the elements of a collection belong to the same Class' do
+      expect([1, 2, 4, 'hello'].my_any?(Integer)).to eql(true)
+    end
+
+    it 'returns true if at least one of the elements of a collection match a Regex argument' do
+      expect(['cat', 'bat', 'cup'].my_any?(/t/)).to eql(true)
+    end
+
+    it 'returns true if at least one of the elements of a collection are true' do
+      expect([true, true, false].my_any?).to eql(true)
+    end
+
+    it 'returns false if none of the elements of a collection comply with the given argument' do
+      expect([1,3,5,7].my_any?(&:even?)).to eql(false)
+    end
   end
 
-  it 'returns true if at least one of the elements of a collection are equal to the passed argument' do
-    expect([1, 2, 4, 'hello'].my_any?(2)).to eql(true)
-  end
+  describe '#my_none?' do
+    it 'returns false if any of the elements of a collection comply with a block argument' do
+      expect(array.my_none?{ |x| x > 5}).to eql(false)
+    end
 
-  it 'returns true if at least one of the elements of a collection belong to the same Class' do
-    expect([1, 2, 4, 'hello'].my_any?(Integer)).to eql(true)
-  end
+    it 'returns false if any of the elements of a collection are equal to the passed argument' do
+      expect([1, 2, 4, 'hello'].my_none?(2)).to eql(false)
+    end
 
-  it 'returns true if at least one of the elements of a collection match a Regex argument' do
-    expect(['cat', 'bat', 'cup'].my_any?(/t/)).to eql(true)
-  end
+    it 'returns false if any of the elements of a collection belong to the same Class' do
+      expect([1, 2, 4, 'hello'].my_none?(Integer)).to eql(false)
+    end
 
-  it 'returns true if at least one of the elements of a collection are true' do
-    expect([true, true, false].my_any?).to eql(true)
-  end
+    it 'returns false if any of the elements of a collection match a Regex argument' do
+      expect(['cat', 'bat', 'cup'].my_none?(/t/)).to eql(false)
+    end
 
-  it 'returns false if none of the elements of a collection comply with the given argument' do
-    expect([1,3,5,7].my_any?(&:even?)).to eql(false)
-  end
-end
+    it 'returns false if any of the elements of a collection are true' do
+      expect([true, true, false].my_none?).to eql(false)
+    end
 
+    it 'returns true if none the elements of a collection comply with the given argument' do
+      expect([1,3,5,7].my_none?(&:even?)).to eql(true)
+    end
+  end
 
   describe '#my_count' do
     it 'returns the number of elements in an array' do
@@ -134,6 +159,12 @@ end
 
     it 'returns a new array containing the results of a given block' do
       expect(array.my_map{ |x| x * 2 }).to eql([4, 8, 156, 18, 6])
+    end
+  end
+
+  describe '#my_inject' do
+    it 's' do
+    
     end
   end
 
